@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { useAppDispatch } from "@/redux/hook";
-import { removeTodo } from "@/redux/features/todoSlice";
+import { removeTodo, toggleComplete } from "@/redux/features/todoSlice";
 
 type TTodoCardProps = {
   id: string;
@@ -13,9 +13,13 @@ type TTodoCardProps = {
 const TodoCard = ({ title, description, id, isCompleted }: TTodoCardProps) => {
   const dispatch = useAppDispatch();
 
+  const toggleState = () =>{
+    dispatch(toggleComplete(id))
+  }
+
   return (
     <div className="bg-white rounded-md flex justify-between items-center p-3 border">
-      <input type="checkbox" name="complete" id="complete" />
+      <input onChange={toggleState} type="checkbox" name="complete" id="complete" />
       <p className="font-semibold">{title}</p>
       {/* <p>Time</p> */}
       <div>
