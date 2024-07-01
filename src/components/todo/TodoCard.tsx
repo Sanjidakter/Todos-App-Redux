@@ -2,9 +2,10 @@ import React from "react";
 import { Button } from "../ui/button";
 import { useAppDispatch } from "@/redux/hook";
 import { removeTodo, toggleComplete } from "@/redux/features/todoSlice";
+import { useUpdateTodoMutation, useDeleteTodoMutation } from "@/redux/api/api";
 
 type TTodoCardProps = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   isCompleted: boolean;
@@ -14,14 +15,41 @@ type TTodoCardProps = {
 const TodoCard = ({
   title,
   description,
-  id,
+  _id,
   isCompleted,
   priority,
 }: TTodoCardProps) => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
+
+  const [updateTodo, { isLoading }] = useUpdateTodoMutation();
+  const [deleteTodo, { isLoading: isDeleting }] = useDeleteTodoMutation();
 
   const toggleState = () => {
-    dispatch(toggleComplete(id));
+    const taskData = {
+      title,
+      description,
+      priority,
+      isCompleted,
+    };
+
+    const options = {
+      id: _id,
+      data: {
+        title,
+        description,
+        priority,
+        isCompleted,
+      },
+    };
+    console.log(options);
+
+    updateTodo(options);
+
+    // dispatch(toggleComplete(id));
+  };
+
+  const handleDelete = () => {
+    deleteTodo({ id: _id });
   };
 
   return (
@@ -32,6 +60,7 @@ const TodoCard = ({
         type="checkbox"
         name="complete"
         id="complete"
+        defaultChecked={isCompleted}
       />
       <p className="font-semibold flex-1">{title}</p>
       <div className="flex-1 flex items-center gap-2">
@@ -45,7 +74,7 @@ const TodoCard = ({
         ></div>
         <p>{priority}</p>
       </div>
-      
+
       <div className="flex-1">
         {isCompleted ? (
           <p className="text-green-500">Done</p>
@@ -55,7 +84,7 @@ const TodoCard = ({
       </div>
       <p className="flex-[2]">{description}</p>
       <div className="space-x-5">
-        <Button onClick={() => dispatch(removeTodo(id))} className="bg-red-500">
+        <Button onClick={handleDelete} className="bg-red-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

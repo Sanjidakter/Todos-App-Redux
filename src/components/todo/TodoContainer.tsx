@@ -9,7 +9,7 @@ import { useGetTodosQuery } from "@/redux/api/api";
 const TodoContainer = () => {
   const [priority, setPriority] = useState("");
 
-  console.log(priority);
+  
 
   // From server
   const { data: todos, isLoading, isError } = useGetTodosQuery(priority); //pollingInterval:1000- 1s por por reload hobe
